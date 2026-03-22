@@ -4,13 +4,25 @@ import { asc,desc } from "drizzle-orm";
 import { eq } from "drizzle-orm";
 
 
-export async function createPipeline(pipe: Pipeline) {
+export async function createSub(subs: Subscriber[]) {
   const [result] = await db
-    .insert(pipelines)
-    .values(pipe)
-    .onConflictDoNothing()
+    .insert(subscribers)
+    .values(subs)    
     .returning();
   return result;
 }
+
+export async function getSubs(PipeId: string) {
+  const [result] = await db
+    .select({subscriberUrl:subscribers.subscriberUrl})
+    .from(subscribers)
+    .where(eq(subscribers.pipelineId, PipeId));
+
+  return result;
+}
+
+
+
+
 
 
