@@ -35,9 +35,7 @@
         "pipelines_source_unique": {
           "name": "pipelines_source_unique",
           "nullsNotDistinct": false,
-          "columns": [
-            "source"
-          ]
+          "columns": ["source"]
         }
       },
       "policies": {},
@@ -74,12 +72,8 @@
           "name": "subscribers_pipelineId_pipelines_id_fk",
           "tableFrom": "subscribers",
           "tableTo": "pipelines",
-          "columnsFrom": [
-            "pipelineId"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["pipelineId"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }

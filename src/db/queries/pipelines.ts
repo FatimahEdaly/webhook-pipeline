@@ -1,29 +1,20 @@
 import { db } from "../index.js";
-import { pipelines ,Pipeline} from "../schema.js";
-import { asc,desc } from "drizzle-orm";
+import { pipelines, Pipeline } from "../schema.js";
+import { asc, desc } from "drizzle-orm";
 import { eq } from "drizzle-orm";
 
-
 export async function createPipe(pipe: Pipeline) {
-  const [result] = await db
-    .insert(pipelines)
-    .values(pipe)     
-    .returning();
+  const [result] = await db.insert(pipelines).values(pipe).returning();
   return result;
 }
 
-
 export async function getAllpipes() {
-
   let query = db.select().from(pipelines);
 
- 
-
- 
   return await query;
 }
 
- export async function getPipeById(PipeId: string) {
+export async function getPipeById(PipeId: string) {
   const [result] = await db
     .select()
     .from(pipelines)
@@ -41,25 +32,21 @@ export async function deletePipeById(id: string) {
   return deleted;
 }
 
-
-
 export async function updatePipe(id: string, data: Partial<Pipeline>) {
   const [result] = await db
     .update(pipelines)
     .set({
       ...data,
-     
     })
     .where(eq(pipelines.id, id))
     .returning();
   return result;
 }
 
-
-export async function  setSource(id: string, Source:string) {
+export async function setSource(id: string, Source: string) {
   const [result] = await db
     .update(pipelines)
-    .set({source:Source})
+    .set({ source: Source })
     .where(eq(pipelines.id, id))
     .returning();
   return result;

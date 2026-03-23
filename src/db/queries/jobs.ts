@@ -1,42 +1,25 @@
 import { db } from "../index.js";
-import { jobs,Job} from "../schema.js";
-import { sql,eq,asc,lt,and,or} from "drizzle-orm";
+import { jobs, Job } from "../schema.js";
+import { sql, eq, asc, lt, and, or } from "drizzle-orm";
 
-
-
-export async function createJob(job:Job) {
-  const [result] = await db
-    .insert(jobs)
-    .values(job)     
-    .returning();
+export async function createJob(job: Job) {
+  const [result] = await db.insert(jobs).values(job).returning();
   return result;
 }
 
-
 export async function getAllJobs() {
-
   let query = db.select().from(jobs);
 
- 
-
- 
   return await query;
 }
 
- export async function getJobById(jobId: string) {
-  const [result] = await db
-    .select()
-    .from(jobs)
-    .where(eq(jobs.id, jobId));
+export async function getJobById(jobId: string) {
+  const [result] = await db.select().from(jobs).where(eq(jobs.id, jobId));
 
   return result;
 }
 
-
-export async function updateJobStatus(
-  jobId: string,
-  status: string
-) {
+export async function updateJobStatus(jobId: string, status: string) {
   const [result] = await db
     .update(jobs)
     .set({ status })
@@ -60,27 +43,19 @@ export async function incrementAttempts(jobId: string) {
 }
 
 export async function getPipeJobs(pipeId: string) {
-  return await db
-    .select()
-    .from(jobs)
-    .where(eq(jobs.pipelineId, pipeId));
-
-  
+  return await db.select().from(jobs).where(eq(jobs.pipelineId, pipeId));
 }
 
 export async function getPendingJobs() {
-
   return db
     .select()
     .from(jobs)
-    .where(and(
-    or(
-      eq(jobs.status, "pending"),
-      eq(jobs.status, "failed")
-    ),
-    lt(jobs.attempts, 3)
-  ))
+    .where(
+      and(
+        or(eq(jobs.status, "pending"), eq(jobs.status, "failed")),
+        lt(jobs.attempts, 3),
+      ),
+    )
     .orderBy(asc(jobs.createdAt))
     .limit(5);
-
 }
