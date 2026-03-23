@@ -8,7 +8,8 @@ jobs:
   tests:
     name: Tests
     runs-on: ubuntu-latest
-
+    env:
+      DATABASE_URL: ${{ secrets.DB_URL }}
     steps:
       - name: Check out code
         uses: actions/checkout@v4
