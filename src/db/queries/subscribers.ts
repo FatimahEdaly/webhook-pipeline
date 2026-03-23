@@ -12,13 +12,13 @@ export async function createSub(subs: Subscriber[]) {
   return result;
 }
 
-export async function getSubs(PipeId: string) {
-  const [result] = await db
-    .select({subscriberUrl:subscribers.subscriberUrl})
-    .from(subscribers)
-    .where(eq(subscribers.pipelineId, PipeId));
+export async function getSubs(pipeId: string) {
 
-  return result;
+  return db
+    .select({ subscriberUrl: subscribers.subscriberUrl })
+    .from(subscribers)
+    .where(eq(subscribers.pipelineId, pipeId));
+
 }
 
 

@@ -15,7 +15,7 @@ export async function createPipe(pipe: Pipeline) {
 
 export async function getAllpipes() {
 
-  let query = db.select().from(pipelines).$dynamic();
+  let query = db.select().from(pipelines);
 
  
 
