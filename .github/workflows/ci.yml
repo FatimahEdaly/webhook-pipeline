@@ -19,7 +19,6 @@ jobs:
         with:
           node-version: 22
 
-     
       - name: Install dependencies
         run: npm ci
 
@@ -37,10 +36,9 @@ jobs:
         with:
           node-version: 22
 
-     
       - name: Install dependencies
         run: npm ci
-      
+
       - name: Run formating
         run: npm run format:check
 
