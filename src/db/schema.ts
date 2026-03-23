@@ -70,5 +70,5 @@ export const deliveryAttempts = pgTable("delivery_attempts", {
 export type Pipeline = typeof pipelines.$inferInsert;
 export type  Subscriber = typeof subscribers.$inferInsert;
 export type  Job = typeof jobs.$inferInsert;
-export type  Attempts=typeof deliveryAttempts.$inferInsert;
+export type  Attempt=typeof deliveryAttempts.$inferInsert;
 
