@@ -58,3 +58,6 @@ jobs:
 
       - name: Run linting
         run: npm run lint -- --max-warnings=0
+
+      - name: Build Docker Image
+        run: docker build -t zapier-app:test .  
