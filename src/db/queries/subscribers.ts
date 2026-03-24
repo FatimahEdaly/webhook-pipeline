@@ -1,6 +1,5 @@
 import { db } from "../index.js";
-import { subscribers, Subscriber, Pipeline, pipelines } from "../schema.js";
-import { asc, desc } from "drizzle-orm";
+import { subscribers, Subscriber } from "../schema.js";
 import { eq } from "drizzle-orm";
 
 export async function createSub(subs: Subscriber[]) {
@@ -8,11 +7,9 @@ export async function createSub(subs: Subscriber[]) {
   return result;
 }
 
-export async function getSubs(PipeId: string) {
-  const [result] = await db
+export async function getSubs(pipeId: string) {
+  return db
     .select({ subscriberUrl: subscribers.subscriberUrl })
     .from(subscribers)
-    .where(eq(subscribers.pipelineId, PipeId));
-
-  return result;
+    .where(eq(subscribers.pipelineId, pipeId));
 }

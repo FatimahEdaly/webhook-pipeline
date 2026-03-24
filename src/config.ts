@@ -1,6 +1,5 @@
 import type { MigrationConfig } from "drizzle-orm/migrator";
-
-process.loadEnvFile(); //to load the environment variables in our .env file
+import "dotenv/config";
 
 const migrationConfig: MigrationConfig = {
   migrationsFolder: "./src/db/migrations",
@@ -12,7 +11,8 @@ export type DBConfig = {
 };
 
 function envOrThrow(key: string) {
-  const value = process.env[key];
+  const value = process.env[key as keyof NodeJS.ProcessEnv];
+
   if (!value) {
     throw new Error(`Missing environment variable: ${key}`);
   }

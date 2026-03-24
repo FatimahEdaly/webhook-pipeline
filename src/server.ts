@@ -18,8 +18,14 @@ import {
   deletePipeById,
   updatePipe,
 } from "./db/queries/pipelines.js";
+import {
+  createJob,
+  getJobById,
+  getAllJobs,
+  getPipeJobs,
+} from "./db/queries/jobs.js";
 import { createSub, getSubs } from "./db/queries/subscribers.js";
-import { Subscriber } from "./db/schema.js";
+import { getJobAttempts } from "./db/queries/attemps.js";
 
 const migrationClient = postgres(config.db.url, { max: 1 });
 await migrate(drizzle(migrationClient), config.db.migrationConfig); // == npx drizzle-kit migrate
@@ -49,10 +55,10 @@ function errorHandler(
   }
 
   res.status(500).json({ error: "Something went wrong on our end" });
+  return next(err);
 }
 
-const PORT = 3000;
-const app = express();
+export const app = express();
 
 app.use(express.json());
 
@@ -76,7 +82,7 @@ app.post(
 
       const pipelineId = pipeline.id;
       source = `/webhook/${pipelineId}`;
-      const result = await setSource(pipelineId, source);
+      await setSource(pipelineId, source);
       pipeline.source = source;
 
       const subs = subscribers.map((url: string) => ({
@@ -157,7 +163,6 @@ app.put(
       if (!pipe)
         throw new NotFoundError(`no pipeline with this id ${pipelineId}`);
 
-      const result = await updatePipe(pipelineId as string, action);
       return res.status(204).send();
     } catch (err) {
       next(err);
@@ -183,8 +188,110 @@ app.delete(
   },
 );
 
+app.post(
+  "/webhook/:pipelineId",
+  async (
+    req: Request<{ pipelineId: string }>,
+    res: Response,
+    next: NextFunction,
+  ) => {
+    try {
+      const { pipelineId } = req.params;
+      const { payload } = req.body;
+
+      if (!payload) throw new BadRequestError("payload required");
+
+      const pipeline = await getPipeById(pipelineId);
+
+      if (!pipeline)
+        throw new NotFoundError(`no pipeline with this id ${pipelineId}`);
+
+      const job = await createJob({ pipelineId, payload });
+
+      return res.status(202).json({
+        message: "job queued successfully",
+        jobId: job.id,
+      });
+    } catch (err) {
+      next(err);
+    }
+  },
+);
+
+app.get(
+  "/api/pipelines/:pipelineId/jobs",
+  async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const { pipelineId } = req.params;
+      const pipe = await getPipeById(pipelineId as string);
+
+      if (!pipe)
+        throw new NotFoundError(`no pipeline with this id ${pipelineId}`);
+
+      const jobs = await getPipeJobs(pipe.id);
+
+      return res.status(200).json({ jobs });
+    } catch (err) {
+      next(err);
+    }
+  },
+);
+
+app.get(
+  "/api/jobs",
+  async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const jobs = await getAllJobs();
+
+      if (!Array.isArray(jobs) || jobs.length === 0)
+        throw new NotFoundError("No jobs in database yet");
+
+      return res.status(200).json(jobs);
+    } catch (err) {
+      next(err);
+    }
+  },
+);
+
+app.get(
+  "/api/jobs/:jobId",
+  async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const { jobId } = req.params;
+
+      const job = await getJobById(jobId as string);
+
+      if (!job) throw new NotFoundError("job not found");
+
+      return res.status(200).json(job);
+    } catch (err) {
+      next(err);
+    }
+  },
+);
+
+app.get(
+  "/api/jobs/:jobId/attemptsHistory",
+  async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const { jobId } = req.params;
+
+      const job = await getJobById(jobId as string);
+
+      if (!job) throw new NotFoundError("job not found");
+
+      const attemps = await getJobAttempts(jobId as string);
+
+      if (!Array.isArray(attemps) || attemps.length === 0)
+        throw new NotFoundError("no attempts for this job yet");
+
+      return res.status(200).json(attemps);
+    } catch (err) {
+      next(err);
+    }
+  },
+);
+
 app.use(errorHandler);
 
-app.listen(PORT, () => {
-  console.log(`Server is running at http://localhost:${PORT}`);
-});
+export default app;

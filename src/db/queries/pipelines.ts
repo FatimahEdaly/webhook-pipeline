@@ -1,6 +1,5 @@
 import { db } from "../index.js";
 import { pipelines, Pipeline } from "../schema.js";
-import { asc, desc } from "drizzle-orm";
 import { eq } from "drizzle-orm";
 
 export async function createPipe(pipe: Pipeline) {
@@ -9,7 +8,7 @@ export async function createPipe(pipe: Pipeline) {
 }
 
 export async function getAllpipes() {
-  let query = db.select().from(pipelines).$dynamic();
+  const query = db.select().from(pipelines);
 
   return await query;
 }
