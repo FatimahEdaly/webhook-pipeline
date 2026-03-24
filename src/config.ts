@@ -1,6 +1,7 @@
 import type { MigrationConfig } from "drizzle-orm/migrator";
+import "dotenv/config";
 
-process.loadEnvFile(); //to load the environment variables in our .env file
+
 
 const migrationConfig: MigrationConfig = {
   migrationsFolder: "./src/db/migrations",
