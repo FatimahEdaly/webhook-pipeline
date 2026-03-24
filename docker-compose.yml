@@ -1,0 +1,40 @@
+version: '3.8'
+
+services:
+  # خدمة قاعدة البيانات
+  db:
+    image: postgres:15-alpine
+    container_name: zapier_db
+    restart: always
+    environment:
+      POSTGRES_USER: postgres       # المستخدم هنا postgres
+      POSTGRES_PASSWORD: postgres   # كلمة المرور postgres
+      POSTGRES_DB: pipelines_db
+    ports:
+      - "5432:5432"
+    healthcheck:
+      # تم تغيير -U user إلى -U postgres ليتطابق مع الإعدادات أعلاه
+      test: ["CMD-SHELL", "pg_isready -U postgres -d pipelines_db"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  # خدمة التطبيق (Zapier App)
+  app:
+    build: .
+    container_name: zapier_app
+    restart: always
+    ports:
+      - "3000:3000"
+    environment:
+      # الرابط الآن صحيح 100% ويستخدم db كعنوان للمضيف
+      DB_URL: postgres://postgres:postgres@db:5432/pipelines_db?sslmode=disable
+      NODE_ENV: production
+    depends_on:
+      db:
+        condition: service_healthy 
+
+volumes:
+  postgres_data:
