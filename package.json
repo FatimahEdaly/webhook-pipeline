@@ -12,7 +12,8 @@
     "migrate": "drizzle-kit migrate",
     "test": "vitest --run",
     "format:write": "prettier --write \"src/**/*.{js,ts,json,css,md}\"",
-    "format:check": "prettier --check \"src/**/*.{js,ts,json,css,md}\""
+    "format:check": "prettier --check \"src/**/*.{js,ts,json,css,md}\"",
+    "lint": "eslint ."
   },
   "keywords": [],
   "author": "",
