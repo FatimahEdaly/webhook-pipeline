@@ -2,17 +2,16 @@ import request from "supertest";
 import { app } from "../server.js";
 import { describe, expect, test } from "vitest";
 
-
-
 describe("webhook", () => {
   test("creates job successfully", async () => {
-    const pipeline = await request(app)
-      .post("/pipelines")
+    const pipelineRes = await request(app)
+      .post("/api/pipelines")
       .send({
-        name: "test pipeline",
+        action: "print",
+        subscribers: ["https://example.com"],
       });
 
-    const pipelineId = pipeline.body.id;
+    const pipelineId = pipelineRes.body.pipeline.id;
 
     const res = await request(app)
       .post(`/webhook/${pipelineId}`)

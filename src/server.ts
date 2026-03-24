@@ -27,7 +27,6 @@ import {
 import { createSub, getSubs } from "./db/queries/subscribers.js";
 import { getJobAttempts } from "./db/queries/attemps.js";
 
-
 const migrationClient = postgres(config.db.url, { max: 1 });
 await migrate(drizzle(migrationClient), config.db.migrationConfig); // == npx drizzle-kit migrate
 
@@ -62,7 +61,6 @@ function errorHandler(
 export const app = express();
 
 app.use(express.json());
-
 
 app.post(
   "/api/pipelines",
