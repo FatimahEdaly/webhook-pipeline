@@ -8,7 +8,7 @@ export async function createJob(job: Job) {
 }
 
 export async function getAllJobs() {
-  let query = db.select().from(jobs);
+  const query = db.select().from(jobs);
 
   return await query;
 }

@@ -26,7 +26,6 @@ import {
 } from "./db/queries/jobs.js";
 import { createSub, getSubs } from "./db/queries/subscribers.js";
 import { getJobAttempts } from "./db/queries/attemps.js";
-import { Subscriber } from "./db/schema.js";
 import { worker } from "./worker.js";
 
 const migrationClient = postgres(config.db.url, { max: 1 });
@@ -57,9 +56,9 @@ function errorHandler(
   }
 
   res.status(500).json({ error: "Something went wrong on our end" });
+  return next(err);
 }
 
-const PORT = 3000;
 export const app = express();
 
 app.use(express.json());
@@ -85,7 +84,7 @@ app.post(
 
       const pipelineId = pipeline.id;
       source = `/webhook/${pipelineId}`;
-      const result = await setSource(pipelineId, source);
+      await setSource(pipelineId, source);
       pipeline.source = source;
 
       const subs = subscribers.map((url: string) => ({

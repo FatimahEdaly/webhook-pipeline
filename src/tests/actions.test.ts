@@ -1,5 +1,5 @@
 import { upperCase, sortAsc, sortDesc } from "../actions.js";
-import { describe, it, expect, test } from "vitest";
+import { describe, expect, test } from "vitest";
 
 describe("actions tests", () => {
   test("sortAsc works correctly", () => {

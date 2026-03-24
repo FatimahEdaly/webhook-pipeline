@@ -1,4 +1,4 @@
-import { describe, it, expect, test } from "vitest";
+import { describe, expect, test } from "vitest";
 import { app } from "../server.js";
 import request from "supertest";
 describe("pipelines api", () => {

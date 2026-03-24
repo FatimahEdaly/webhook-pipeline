@@ -1,6 +1,5 @@
 import { db } from "../index.js";
-import { subscribers, Subscriber, Pipeline, pipelines } from "../schema.js";
-import { asc, desc } from "drizzle-orm";
+import { subscribers, Subscriber } from "../schema.js";
 import { eq } from "drizzle-orm";
 
 export async function createSub(subs: Subscriber[]) {

@@ -12,7 +12,8 @@ export type DBConfig = {
 };
 
 function envOrThrow(key: string) {
-  const value = process.env[key];
+  const value = process.env[key as keyof NodeJS.ProcessEnv];
+
   if (!value) {
     throw new Error(`Missing environment variable: ${key}`);
   }

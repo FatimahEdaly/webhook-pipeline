@@ -1,6 +1,6 @@
 import { db } from "../index.js";
 import { deliveryAttempts, Attempt } from "../schema.js";
-import { sql, eq, and } from "drizzle-orm";
+import { eq, and } from "drizzle-orm";
 
 export async function getJobAttempts(jobId: string) {
   return await db

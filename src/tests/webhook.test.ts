@@ -1,6 +1,6 @@
 import request from "supertest";
 import { app } from "../server.js";
-import { describe, it, expect, test } from "vitest";
+import { describe, expect, test } from "vitest";
 
 describe("webhook", () => {
   test("creates job successfully", async () => {

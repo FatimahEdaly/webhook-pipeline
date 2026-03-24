@@ -46,7 +46,7 @@ async function processJob(job: Job, originalStatus: string) {
         throw new Error("payload must be an object");
       }
 
-      result = upperCase(job.payload as Record<string, any>);
+      result = upperCase(job.payload as Record<string, string>);
       break;
 
     default:
@@ -97,6 +97,7 @@ async function processJob(job: Job, originalStatus: string) {
         responseCode: 0,
         status: "failed",
       });
+      console.error(err);
     }
   }
 
@@ -122,6 +123,7 @@ export async function worker() {
           await processJob(job, originalStatus);
         } catch (err) {
           await updateJobStatus(job.id as string, "failed");
+          console.error(err);
         }
       }
 
