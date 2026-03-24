@@ -16,11 +16,11 @@ WORKDIR /app
 COPY --from=builder /app/dist ./dist
 COPY --from=builder /app/node_modules ./node_modules
 COPY --from=builder /app/package*.json ./
-# نسخ مجلد الميغريشن لأنك تستدعي البرمجة داخل السيرفر
+
 COPY --from=builder /app/src/db/migrations ./dist/db/migrations
 
 # فتح المنفذ
 EXPOSE 3000
 
-# تشغيل التطبيق باستخدام سكريبت start المعرف عندك (node dist/index.js)
+
 CMD ["npm", "start"]
