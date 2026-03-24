@@ -1,8 +1,6 @@
 import type { MigrationConfig } from "drizzle-orm/migrator";
 import "dotenv/config";
 
-
-
 const migrationConfig: MigrationConfig = {
   migrationsFolder: "./src/db/migrations",
 };
